@@ -16,7 +16,7 @@ app.use(helmet());
 
 // CORS
 app.use(cors({
-  origin: config.cors.origin,
+  origin: config.cors.origin.split(',').map(s => s.trim()),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
