@@ -10,6 +10,7 @@ import staffRoutes from './staff.routes.js';
 import announcementRoutes from './announcement.routes.js';
 import reportRoutes from './report.routes.js';
 import leadRoutes from './lead.routes.js';
+import mobileRoutes from './mobile.routes.js';
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/staff', staffRoutes);
 router.use('/announcements', announcementRoutes);
 router.use('/reports', reportRoutes);
 router.use('/leads', leadRoutes);
+router.use('/mobile', mobileRoutes);
 
 export default router;

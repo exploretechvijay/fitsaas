@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcryptjs';
 import { supabaseAdmin } from '../config/supabase.js';
 import ApiError from '../utils/ApiError.js';
 import { parsePagination, paginatedResponse } from '../utils/pagination.js';
@@ -57,7 +58,25 @@ class MemberService {
       });
     }
 
-    return member;
+    // Auto-create user account for mobile app login
+    let memberPassword = null;
+    if (data.email) {
+      const tempPassword = `Fit@${Date.now().toString(36)}`;
+      const passwordHash = await bcrypt.hash(tempPassword, 12);
+      const { error: userError } = await supabaseAdmin.from('users').insert({
+        user_id: uuidv4(),
+        gym_id: gymId,
+        email: data.email,
+        password_hash: passwordHash,
+        role: 'member',
+        full_name: data.full_name,
+        phone: data.phone,
+        is_active: true,
+      });
+      if (!userError) memberPassword = tempPassword;
+    }
+
+    return { ...member, member_password: memberPassword };
   }
 
   async listMembers(gymId, query) {
